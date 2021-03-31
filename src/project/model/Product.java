@@ -2,15 +2,23 @@ package project.model;
 
 public class Product {
     private String name;
-    private Double code;
+    private int code;
     private Price price;
     private String description;
-    private Double quantity;
+    private int quantity;
     private Category category;
 
     public Product() { }
 
-    public Product(String name, Double code, Price price, String description, Double quantity, Category category) {
+    public Product(String name, int code, Price price, String description, Category category) {
+        this.name = name;
+        this.code = code;
+        this.price = price;
+        this.description = description;
+        this.category = category;
+    }
+
+    public Product(String name, int code, Price price, String description, int quantity, Category category) {
         this.name = name;
         this.code = code;
         this.price = price;
@@ -27,11 +35,11 @@ public class Product {
         this.name = name;
     }
 
-    public Double getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(Double code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -51,11 +59,11 @@ public class Product {
         this.description = description;
     }
 
-    public Double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

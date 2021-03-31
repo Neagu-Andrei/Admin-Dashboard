@@ -6,7 +6,10 @@ public class Price {
     private Discount discount;
     private Float VAT;
 
-    public Price() { }
+    public Price() {
+        this.discount = new Discount();
+
+    }
 
     public Price(Double salesPrice, Float VAT) {
         this.salesPrice = salesPrice;
@@ -38,11 +41,16 @@ public class Price {
 
     public void setVAT(Float VAT) { this.VAT = VAT; }
 
+    public Discount getDiscount() { return discount; }
+
+    public void setDiscount(Discount discount) { this.discount = discount; }
+
     @Override
     public String toString() {
         return "Price{" +
                 "salesPrice=" + salesPrice +
                 ", purchasePrice=" + purchasePrice +
+                ", discount=" + discount +
                 ", VAT=" + VAT +
                 '}';
     }

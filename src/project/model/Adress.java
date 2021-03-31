@@ -6,6 +6,7 @@ public class Adress {
     private String City;
     private String Country;
 
+    public Adress(){}
 
     public Adress(String street, int number, String city, String country) {
         street = street;

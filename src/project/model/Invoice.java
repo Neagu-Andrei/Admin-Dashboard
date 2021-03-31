@@ -1,19 +1,17 @@
 package project.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Invoice {
     private Date date;
     private Double sum;
-    private List<Product> products;
+    private ArrayList<Product> products;
 
-    public Invoice() { }
-
-    public Invoice(Date date, Double sum, List<Product> products) {
-        this.date = date;
-        this.sum = sum;
+    public Invoice(ArrayList<Product> products) {
+        this.date = new Date();
         this.products = products;
+        setSum();
     }
 
     public Date getDate() {
@@ -30,11 +28,33 @@ public class Invoice {
         }
     }
 
-    public List<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public int findProduct(Product product){
+        for (int i=0;i<this.products.size();i++){
+            if (product.getCode() ==products.get(i).getCode())
+                return i;
+        }
+        return -1;
+    }
+
+    public void addProduct(Product product){
+        boolean sem = false;
+        for (Product product1: this.products)
+            if (product.getCode() == product1.getCode()){
+                product1.setQuantity(product1.getQuantity() + product.getQuantity());
+                sem = true;
+                break;
+            }
+        if (!sem){
+            this.products.add(product);
+        }
+        this.sum += product.getPrice().getPurchasePrice();
+    }
+
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
 

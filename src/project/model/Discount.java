@@ -6,26 +6,22 @@ public class Discount {
 
     public Discount() { }
 
+    public Discount(Float discount) { this.discount = discount; }
+
+    public Discount(String discountDescription) { this.discountDescription = discountDescription; }
+
     public Discount(Float discount, String discountDescription) {
         this.discount = discount;
         this.discountDescription = discountDescription;
     }
 
-    public Float getDiscount() {
-        return discount;
-    }
+    public Float getDiscount() { return discount; }
 
-    public void setDiscount(Float discount) {
-        this.discount = discount;
-    }
+    public void setDiscount(Float discount) { this.discount = discount; }
 
-    public String getDiscountDescription() {
-        return discountDescription;
-    }
+    public String getDiscountDescription() { return discountDescription; }
 
-    public void setDiscountDescription(String discountDescription) {
-        this.discountDescription = discountDescription;
-    }
+    public void setDiscountDescription(String discountDescription) { this.discountDescription = discountDescription; }
 
     @Override
     public String toString() {

@@ -8,7 +8,7 @@ public class Distribuitor extends Company {
 
     public Distribuitor() {}
 
-    public Distribuitor(String name, Adress adress, String contactPerson, String email, Double contactNumber, Set<Product> products) {
+    public Distribuitor(String name, Adress adress, String contactPerson, String email, int contactNumber, Set<Product> products) {
         super(name, adress, contactPerson, email, contactNumber);
         this.products = products;
     }

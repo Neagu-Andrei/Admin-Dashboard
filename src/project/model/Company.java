@@ -5,11 +5,11 @@ public class Company{
     private Adress adress;
     private String contactPerson;
     private String email;
-    private Double contactNumber;
+    private int contactNumber;
 
     public Company() { }
 
-    public Company(String name, Adress adress, String contactPerson, String email, Double contactNumber) {
+    public Company(String name, Adress adress, String contactPerson, String email, int contactNumber) {
         this.name = name;
         this.adress = adress;
         this.contactPerson = contactPerson;
@@ -33,9 +33,9 @@ public class Company{
 
     public void setEmail(String email) { this.email = email; }
 
-    public Double getContactNumber() { return contactNumber; }
+    public int getContactNumber() { return contactNumber; }
 
-    public void setContactNumber(Double contactNumber) { this.contactNumber = contactNumber; }
+    public void setContactNumber(int contactNumber) { this.contactNumber = contactNumber; }
 
 
 
