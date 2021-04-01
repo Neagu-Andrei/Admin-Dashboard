@@ -14,23 +14,17 @@ public class Invoice {
         setSum();
     }
 
-    public Date getDate() {
-        return date;
-    }
+    public Date getDate() { return date; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(Date date) { this.date = date; }
 
     public void setSum() {
         for (int i=0; i<= products.size(); i++){
-            sum += products.get(i).getPrice().getPurchasePrice();
+            sum += products.get(i).getPrice().getSalesPrice();
         }
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
-    }
+    public ArrayList<Product> getProducts() { return products; }
 
     public int findProduct(Product product){
         for (int i=0;i<this.products.size();i++){

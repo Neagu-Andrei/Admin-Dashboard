@@ -1,7 +1,8 @@
 package project.model;
 
+import java.util.Scanner;
+
 public class Price {
-    private Double salesPrice;
     private Double purchasePrice;
     private Discount discount;
     private Float VAT;
@@ -11,31 +12,20 @@ public class Price {
 
     }
 
-    public Price(Double salesPrice, Float VAT) {
-        this.salesPrice = salesPrice;
+    public Price(Double purchasePrice, Float VAT) {
+        this.purchasePrice = purchasePrice;
         this.VAT = VAT;
     }
 
-    public Price(Double salesPrice, Discount discount, Float VAT) {
-        this.salesPrice = salesPrice;
-        this.discount = discount;
-        this.VAT = VAT;
-    }
-
-    public Price(Double salesPrice, Double purchasePrice, Discount discount, Float VAT) {
-        this.salesPrice = salesPrice;
+    public Price(Double purchasePrice, Discount discount, Float VAT) {
         this.purchasePrice = purchasePrice;
         this.discount = discount;
         this.VAT = VAT;
     }
 
-    public Double getPurchasePrice() { return purchasePrice; }
+    public Double getSalesPrice() { return purchasePrice; }
 
-    public void setPurchasePrice(Double purchasePrice) { this.purchasePrice = purchasePrice; }
-
-    public Double getSalesPrice() { return salesPrice; }
-
-    public void setSalesPrice(Double salesPrice) { this.salesPrice = salesPrice; }
+    public void setSalesPrice(Double purchasePrice) { this.purchasePrice = purchasePrice; }
 
     public Float getVAT() { return VAT; }
 
@@ -45,11 +35,19 @@ public class Price {
 
     public void setDiscount(Discount discount) { this.discount = discount; }
 
+    public void readPrice(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Pretul de cumparare: ");
+        this.purchasePrice = scanner.nextDouble();
+        this.VAT = scanner.nextFloat();
+        discount.readDiscount();
+        System.out.println("");
+    }
     @Override
     public String toString() {
         return "Price{" +
-                "salesPrice=" + salesPrice +
-                ", purchasePrice=" + purchasePrice +
+                "purchasePrice=" + purchasePrice +
                 ", discount=" + discount +
                 ", VAT=" + VAT +
                 '}';

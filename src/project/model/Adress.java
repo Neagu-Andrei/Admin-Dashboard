@@ -1,5 +1,7 @@
 package project.model;
 
+import java.util.Scanner;
+
 public class Adress {
     private String street;
     private int number;
@@ -30,6 +32,19 @@ public class Adress {
     public String getCountry() { return Country; }
 
     public void setCountry(String country) { Country = country; }
+
+    public void readAdress(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Numele strazii: ");
+        this.street = scanner.nextLine();
+        System.out.println("Numarul strazii: ");
+        this.number = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Orasul: ");
+        this.City = scanner.nextLine();
+        System.out.println("Tara: ");
+        this.Country = scanner.nextLine();
+    }
 
     @Override
     public String toString() {

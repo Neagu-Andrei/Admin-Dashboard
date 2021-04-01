@@ -2,8 +2,8 @@ package project.service;
 
 import project.model.*;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class ClientService {
     private ArrayList<Category> categories;
@@ -34,7 +34,7 @@ public class ClientService {
         Scanner scanner = new Scanner(System.in);
         try {
             for (Category cat:this.categories)
-                if(category.getName() == cat.getName()){
+                if(category.getName().equals(cat.getName())){
                     throw new Exception("Aceasta categorie este deja inserata");
                 }
             categories.add(category);
@@ -81,7 +81,7 @@ public class ClientService {
     public void deleteCategory(String name){
         try{
             for (Category category:this.categories){
-                if(category.getName() == name) {
+                if(category.getName().equals(name)) {
                     this.categories.remove(category);
                     throw new Exception("Categoria a fost stearsa.");
                 }
@@ -142,7 +142,7 @@ public class ClientService {
     public void updateCategory(Category category){
        try {
            for (Category category1:this.categories){
-               if (category.getName() == category1.getName()){
+               if (category.getName().equals(category1.getName())){
                     category1.setDescription(category.getDescription());
                     throw new Exception("Categoria a fost modificata.");
                }
@@ -174,7 +174,7 @@ public class ClientService {
     public void updateCompany(Company company){
         try {
             for (Company company1:this.companies){
-                if (company.getName() == company1.getName()){
+                if (company.getName().equals(company1.getName())){
                     company1.setAdress(company.getAdress());
                     company1.setContactNumber(company.getContactNumber());
                     company1.setContactPerson(company.getContactPerson());
@@ -189,6 +189,58 @@ public class ClientService {
         }
     }
 
+    public void updateBranch(int number){
+        Scanner scanner = new Scanner(System.in);
+        try{
+            for (Branch branch:this.branches){
+                if (branch.getNumber() == number){
+                    Adress adress = new Adress();
+                    adress.readAdress();
+                    branch.setAdress(adress);
+                    throw new Exception("Am modificat branch ul");
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void showCategories(){
+        for (int i=0;i<categories.size();i++)
+            System.out.println((i+1) + ":\t" +categories.get(i));
+    }
+
+    public void showCompanies(){
+        for (int i=0;i<companies.size();i++)
+            System.out.println((i+1) + ":\t"+ companies.get(i));
+    }
+
+    public void showDistribuitors(){
+        for (int i=0;i<distribuitors.size();i++)
+            System.out.println((i+1)+ ": "+ distribuitors.get(i));
+    }
+
+
+    public void sortCategories(){
+        Collections.sort(categories);
+    }
+
+    public ArrayList<Category> getCategories() { return categories; }
+
+    public void setCategories(ArrayList<Category> categories) { this.categories = categories; }
+
+    public ArrayList<Company> getCompanies() { return companies; }
+
+    public void setCompanies(ArrayList<Company> companies) { this.companies = companies; }
+
+    public ArrayList<Distribuitor> getDistribuitors() { return distribuitors; }
+
+    public void setDistribuitors(ArrayList<Distribuitor> distribuitors) { this.distribuitors = distribuitors; }
+
+    public ArrayList<Branch> getBranches() { return branches; }
+
+    public void setBranches(ArrayList<Branch> branches) { this.branches = branches; }
 
     @Override
     public String toString() {

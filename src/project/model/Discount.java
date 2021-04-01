@@ -1,5 +1,7 @@
 package project.model;
 
+import java.util.Scanner;
+
 public class Discount {
     private Float discount;
     private String discountDescription;
@@ -22,6 +24,15 @@ public class Discount {
     public String getDiscountDescription() { return discountDescription; }
 
     public void setDiscountDescription(String discountDescription) { this.discountDescription = discountDescription; }
+
+    public void readDiscount(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduceti discount ul: ");
+        this.discount = scanner.nextFloat();
+        System.out.println("Introduceti o descriere a discountului: ");
+        this.discountDescription = scanner.nextLine();
+        scanner.nextLine();
+    }
 
     @Override
     public String toString() {

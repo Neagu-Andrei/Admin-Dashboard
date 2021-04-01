@@ -1,6 +1,8 @@
 package project.model;
 
-public class Category {
+import java.util.Scanner;
+
+public class Category implements Comparable<Category> {
     private String name;
     private String description;
 
@@ -18,6 +20,21 @@ public class Category {
     public String getDescription() { return description; }
 
     public void setDescription(String description) { this.description = description; }
+
+    public void readCategory(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Citeste numele categoriei: ");
+        this.name = scanner.nextLine();
+        //scanner.nextLine();
+        System.out.println("Citeste o descriere a categoriei");
+        this.description = scanner.nextLine();
+        //scanner.nextLine();
+    }
+
+    @Override
+    public int compareTo(Category o) {
+        return this.name.compareTo(o.getName());
+    }
 
     @Override
     public String toString() {

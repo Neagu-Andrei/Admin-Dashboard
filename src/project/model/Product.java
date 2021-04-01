@@ -1,16 +1,21 @@
 package project.model;
 
+import java.util.Scanner;
+
 public class Product {
     private String name;
     private int code;
-    private Price price;
+    private SalesPrice price;
     private String description;
     private int quantity;
     private Category category;
 
-    public Product() { }
+    public Product() {
+        this.price = new SalesPrice();
+        this.category = new Category();
+    }
 
-    public Product(String name, int code, Price price, String description, Category category) {
+    public Product(String name, int code, SalesPrice price, String description, Category category) {
         this.name = name;
         this.code = code;
         this.price = price;
@@ -18,7 +23,7 @@ public class Product {
         this.category = category;
     }
 
-    public Product(String name, int code, Price price, String description, int quantity, Category category) {
+    public Product(String name, int code, SalesPrice price, String description, int quantity, Category category) {
         this.name = name;
         this.code = code;
         this.price = price;
@@ -43,11 +48,11 @@ public class Product {
         this.code = code;
     }
 
-    public Price getPrice() {
+    public SalesPrice getPrice() {
         return price;
     }
 
-    public void setPrice(Price price) {
+    public void setPrice(SalesPrice price) {
         this.price = price;
     }
 
@@ -65,6 +70,23 @@ public class Product {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+
+    public void readProduct() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Numele produsului: ");
+        this.name = scanner.nextLine();
+        //scanner.nextLine();
+        System.out.println("Citeste codul produsului: ");
+        this.code = scanner.nextInt();
+        this.price.readSalesPrice();
+        System.out.println("Citeste descrierea");
+        this.description = scanner.nextLine();
+        scanner.nextLine();
+        System.out.println("Citeste cantitatea: ");
+        this.quantity = scanner.nextInt();
+        this.category.readCategory();
     }
 
     @Override
