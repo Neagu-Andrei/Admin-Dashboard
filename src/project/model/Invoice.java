@@ -6,9 +6,9 @@ import java.util.Date;
 public class Invoice {
     private Date date;
     private Double sum;
-    private ArrayList<Product> products;
+    private ArrayList<ProductQuantity> products;
 
-    public Invoice(ArrayList<Product> products) {
+    public Invoice(ArrayList<ProductQuantity> products) {
         this.date = new Date();
         this.products = products;
         setSum();
@@ -24,7 +24,7 @@ public class Invoice {
         }
     }
 
-    public ArrayList<Product> getProducts() { return products; }
+    public ArrayList<ProductQuantity> getProducts() { return products; }
 
     public int findProduct(Product product){
         for (int i=0;i<this.products.size();i++){
@@ -34,9 +34,9 @@ public class Invoice {
         return -1;
     }
 
-    public void addProduct(Product product){
+    public void addProduct(ProductQuantity product){
         boolean sem = false;
-        for (Product product1: this.products)
+        for (ProductQuantity product1: this.products)
             if (product.getCode() == product1.getCode()){
                 product1.setQuantity(product1.getQuantity() + product.getQuantity());
                 sem = true;
@@ -45,10 +45,10 @@ public class Invoice {
         if (!sem){
             this.products.add(product);
         }
-        this.sum += product.getPrice().getPurchasePrice();
+        this.sum += product.getPrice().getSalesPrice();
     }
 
-    public void setProducts(ArrayList<Product> products) {
+    public void setProducts(ArrayList<ProductQuantity> products) {
         this.products = products;
     }
 

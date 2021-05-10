@@ -126,8 +126,8 @@ public class ClientService {
     public void deleteDistribuitor(String name){
         try{
             for (Distribuitor distribuitor:this.distribuitors){
-                if(distribuitor.getName() == name) {
-                    this.categories.remove(distribuitor);
+                if(distribuitor.getName().equals(name)) {
+                    this.distribuitors.remove(distribuitor);
                     throw new Exception("Distribuitorul a fost stears.");
                 }
             }
@@ -156,7 +156,7 @@ public class ClientService {
     public void updateDistribuitor(Distribuitor distribuitor){
         try {
             for (Distribuitor distribuitor1:this.distribuitors){
-                if (distribuitor.getName() == distribuitor1.getName()){
+                if (distribuitor.getName().equals(distribuitor1.getName())){
                     distribuitor1.setAdress(distribuitor.getAdress());
                     distribuitor1.setContactNumber(distribuitor.getContactNumber());
                     distribuitor1.setProducts(distribuitor.getProducts());
@@ -188,9 +188,8 @@ public class ClientService {
             System.out.println(e.getMessage());
         }
     }
-
-    public void updateBranch(int number){
-        Scanner scanner = new Scanner(System.in);
+/*
+    public void updateBranch(Branch updatedBranch){
         try{
             for (Branch branch:this.branches){
                 if (branch.getNumber() == number){
@@ -205,7 +204,7 @@ public class ClientService {
             System.out.println(e.getMessage());
         }
     }
-
+*/
     public void showCategories(){
         for (int i=0;i<categories.size();i++)
             System.out.println((i+1) + ":\t" +categories.get(i));

@@ -15,6 +15,41 @@ public class Main {
         scanner.nextLine();
     }
 
+    public static void modifyCompanyData(Company company){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Doresti sa modifici adresa firmei? (Y/N)");
+        String choices = scanner.nextLine();
+        if (choices.equals("Y")){
+            Adress adress = new Adress();
+            adress.readAdress();
+            company.setAdress(adress);
+        }
+        scanner.nextLine();
+        System.out.println("Doresti sa modifici persoana de contact? (Y/N)");
+        choices = scanner.nextLine();
+        if (choices.equals("Y")){
+            System.out.println("Introduce persoana de contact");
+            String contact = scanner.nextLine();
+            company.setContactPerson(contact);
+        }
+
+        System.out.println("Doresti sa modifici emailul? (Y/N)");
+        choices = scanner.nextLine();
+        if (choices.equals("Y")){
+            System.out.println("Introduce emailul");
+            String email = scanner.nextLine();
+            company.setEmail(email);
+        }
+
+        System.out.println("Doresti sa modifici numarul de contact? (Y/N)");
+        choices = scanner.nextLine();
+        if (choices.equals("Y")){
+            System.out.println("Introduce numarul de contact");
+            int number = scanner.nextInt();
+            company.setContactNumber(number);
+        }
+    }
+
     public static void main(String args[]){
         ClientService clientService = new ClientService();
         Scanner scanner = new Scanner(System.in);
@@ -175,6 +210,63 @@ public class Main {
                     clientService.showDistribuitors();
                     pressAnyKeyToContinue(scanner);
                     break;
+                }
+
+                case 12:{
+
+                    clientService.showDistribuitors();
+                    System.out.println("Numele distribuitorului pe care doriti sa il stergeti: ");
+                    scanner.nextLine();
+                    String name = scanner.nextLine();
+                    clientService.deleteDistribuitor(name);
+                    pressAnyKeyToContinue(scanner);
+                    break;
+                }
+                //de testat cazul in care un distribuitor nu are produse si vrem sa le adaugam
+                case 13:{
+                    clientService.showDistribuitors();
+                    System.out.println("Al catelea distribuitor doresti sa il modifici: ");
+                    scanner.nextLine();
+                    int i = scanner.nextInt();
+                    scanner.nextLine();
+                    Distribuitor newdistribuitor;
+                    newdistribuitor = clientService.getDistribuitors().get(i-1);
+                    modifyCompanyData(newdistribuitor);
+
+                    System.out.println("Doresti sa modifici vreun produs al distribuitorului?(Y/N)");
+                    String choice = scanner.nextLine();
+                    HashSet<Product> distributorProducts = new HashSet<Product>(newdistribuitor.getProducts());
+                    while (choice.equals("Y")){
+                        System.out.println(distributorProducts);
+                        scanner.nextLine();
+                        System.out.println("Codul produsului pe care doresti sa il modifici:");
+                        int code = scanner.nextInt();
+                        for (Product product:distributorProducts){
+                            if (product.getCode() == code){
+                                System.out.println("Doresti sa modifici pretul produsului?(Y/N)");
+                                String secondChoice = scanner.nextLine();
+                                if (secondChoice.equals("Y")){
+                                    System.out.println("Pretul produsului: ");
+                                    SalesPrice price = new SalesPrice(scanner.nextDouble());
+                                    product.setPrice(price);
+                                    System.out.println("Pretul a fost updatat.");
+                                }
+                                System.out.println("Produsul a fost modificat.");
+                                break;
+                            }
+                        }
+                        System.out.println("Doresti sa mai modifici un produs? (Y/N)");
+                        choice = scanner.nextLine();
+                    }
+                    newdistribuitor.setProducts(distributorProducts);
+                    pressAnyKeyToContinue(scanner);
+                }
+
+                case 14:{
+                    Branch branch = new Branch();
+                    branch.readBranch();
+                    clientService.addBranch(branch);
+                    pressAnyKeyToContinue(scanner);
                 }
             }
         }

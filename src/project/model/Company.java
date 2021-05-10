@@ -15,7 +15,7 @@ public class Company{
 
     public Company(String name, Adress adress, String contactPerson, String email, int contactNumber) {
         this.name = name;
-        this.adress = adress;
+        this.adress = new Adress(adress);
         this.contactPerson = contactPerson;
         this.email = email;
         this.contactNumber = contactNumber;

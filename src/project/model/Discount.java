@@ -17,6 +17,11 @@ public class Discount {
         this.discountDescription = discountDescription;
     }
 
+    public Discount(Discount discount) {
+        this.discount = discount.discount;
+        this.discountDescription = discount.discountDescription;
+    }
+
     public Float getDiscount() { return discount; }
 
     public void setDiscount(Float discount) { this.discount = discount; }

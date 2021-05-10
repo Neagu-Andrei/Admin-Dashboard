@@ -2,27 +2,25 @@ package project.model;
 
 import java.util.Scanner;
 
-public class SalesPrice extends Price {
+public class SalesPrice {
     private Double salesPrice;
 
     public SalesPrice() { }
 
-    public SalesPrice(Double purchasePrice, Discount discount, Float VAT, Double salesPrice) {
-        super(purchasePrice, discount, VAT);
+    public SalesPrice(Double salesPrice) {
         this.salesPrice = salesPrice;
     }
 
-    public Double getPurchasePrice() {
+    public Double getSalesPrice() {
         return salesPrice;
     }
 
-    public void setPurchasePrice(Double salesPrice) {
+    public void setSalesPrice(Double salesPrice) {
         this.salesPrice = salesPrice;
     }
 
     public void readSalesPrice(){
         Scanner scanner = new Scanner(System.in);
-        this.readPrice();
         System.out.println("Citeste pretul de vanzare: ");
         this.salesPrice = scanner.nextDouble();
     }

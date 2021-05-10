@@ -5,33 +5,40 @@ import java.util.Scanner;
 public class Adress {
     private String street;
     private int number;
-    private String City;
-    private String Country;
+    private String city;
+    private String country;
 
     public Adress(){}
 
     public Adress(String street, int number, String city, String country) {
-        street = street;
+        this.street = street;
         this.number = number;
-        City = city;
-        Country = country;
+        this.city = city;
+        this.country = country;
+    }
+
+    public Adress(Adress adress) {
+        this.street = adress.street;
+        this.number = adress.number;
+        this.city = adress.city;
+        this.country = adress.country;
     }
 
     public String getStreet() { return street; }
 
-    public void setStreet(String street) { street = street; }
+    public void setStreet(String street) { this.street = street; }
 
     public int getNumber() { return number; }
 
     public void setNumber(int number) { this.number = number; }
 
-    public String getCity() { return City; }
+    public String getCity() { return city; }
 
-    public void setCity(String city) { City = city; }
+    public void setCity(String city) { this.city = city; }
 
-    public String getCountry() { return Country; }
+    public String getCountry() { return country; }
 
-    public void setCountry(String country) { Country = country; }
+    public void setCountry(String country) { this.country = country; }
 
     public void readAdress(){
         Scanner scanner = new Scanner(System.in);
@@ -41,9 +48,9 @@ public class Adress {
         this.number = scanner.nextInt();
         scanner.nextLine();
         System.out.println("Orasul: ");
-        this.City = scanner.nextLine();
+        this.city = scanner.nextLine();
         System.out.println("Tara: ");
-        this.Country = scanner.nextLine();
+        this.country = scanner.nextLine();
     }
 
     @Override
@@ -51,8 +58,8 @@ public class Adress {
         return "Adress{" +
                 "Street='" + street + '\'' +
                 ", number=" + number +
-                ", City='" + City + '\'' +
-                ", Country='" + Country + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 }

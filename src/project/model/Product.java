@@ -7,7 +7,6 @@ public class Product {
     private int code;
     private SalesPrice price;
     private String description;
-    private int quantity;
     private Category category;
 
     public Product() {
@@ -15,20 +14,12 @@ public class Product {
         this.category = new Category();
     }
 
-    public Product(String name, int code, SalesPrice price, String description, Category category) {
-        this.name = name;
-        this.code = code;
-        this.price = price;
-        this.description = description;
-        this.category = category;
-    }
 
     public Product(String name, int code, SalesPrice price, String description, int quantity, Category category) {
         this.name = name;
         this.code = code;
         this.price = price;
         this.description = description;
-        this.quantity = quantity;
         this.category = category;
     }
 
@@ -64,14 +55,6 @@ public class Product {
         this.description = description;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
 
     public void readProduct() {
         Scanner scanner = new Scanner(System.in);
@@ -84,8 +67,6 @@ public class Product {
         System.out.println("Citeste descrierea");
         this.description = scanner.nextLine();
         scanner.nextLine();
-        System.out.println("Citeste cantitatea: ");
-        this.quantity = scanner.nextInt();
         this.category.readCategory();
     }
 
@@ -96,7 +77,6 @@ public class Product {
                 ", code=" + code +
                 ", price=" + price +
                 ", description='" + description + '\'' +
-                ", quantity=" + quantity +
                 '}';
     }
 }
