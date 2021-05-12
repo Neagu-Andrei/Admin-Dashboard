@@ -10,7 +10,15 @@ public class ClientService {
     private ArrayList<Company> companies;
     private ArrayList<Distribuitor> distribuitors;
     private ArrayList<Branch> branches;
+    private ArrayList<Product> products;
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
 
     public ClientService() {
         categories = new ArrayList<>();
@@ -51,7 +59,7 @@ public class ClientService {
     public void addCompany(Company company){
         try{
             for (Company company1:this.companies){
-                if(company.getName() == company1.getName()){
+                if(company.getName().equals(company1.getName())){
                     throw new Exception("Compania pe care doriti sa o inserati exista deja.");
                 }
             }
@@ -65,7 +73,7 @@ public class ClientService {
     public void addDistribuitor(Distribuitor distribuitor) {
         try{
             for (Distribuitor distribuitor1:this.distribuitors){
-                if (distribuitor.getName() == distribuitor1.getName()){
+                if (distribuitor.getName().equals(distribuitor1.getName())){
                     throw new Exception("Distribuitorul pe care doriti sa il inserati exista deja.");
                 }
             }
@@ -76,6 +84,7 @@ public class ClientService {
         }
     }
 
+    public void addProduct(Product product){}
     //Delete
 
     public void deleteCategory(String name){
@@ -96,7 +105,7 @@ public class ClientService {
     public void deleteCompany(String name){
         try{
             for (Company company:this.companies){
-                if(company.getName() == name) {
+                if(company.getName().equals(name)) {
                     this.categories.remove(company);
                     throw new Exception("Compania a fost stearsa.");
                 }

@@ -9,7 +9,7 @@ public class ProductQuantity extends Product{
     public ProductQuantity() { }
 
     public ProductQuantity(String name, int code, SalesPrice price, String description, int quantity, Category category, int quantity1) {
-        super(name, code, price, description, quantity, category);
+        super(name, code, price, description, category);
         this.quantity = quantity1;
     }
 

@@ -1,9 +1,8 @@
 package project;
 
 import project.model.*;
-import project.service.ClientService;
+import project.service.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -52,6 +51,19 @@ public class Main {
 
     public static void main(String args[]){
         ClientService clientService = new ClientService();
+
+        CategoriesCSVService categoriesService = new CategoriesCSVService();
+        CompaniesCSVService companiesService = new CompaniesCSVService();
+        ProductsCSVService productsService = new ProductsCSVService();
+        DistribuitorsCSVService distribuitorsService = new DistribuitorsCSVService();
+
+        AuditCSVService auditService = AuditCSVService.getInstance();
+
+        categoriesService.read(clientService);
+        companiesService.read(clientService);
+        distribuitorsService.read(clientService);
+        productsService.read(clientService);
+
         Scanner scanner = new Scanner(System.in);
         int o = 1;
         System.out.println("\nHello, admin!\n");
@@ -87,12 +99,20 @@ public class Main {
                 case 1:{
                     Category category = new Category();
                     category.readCategory();
+
+                    categoriesService.write(category);
                     clientService.addCategory(category);
+
+                    auditService.log("Adaugare categorie");
+
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
                 case 2: {
                     clientService.showCategories();
+
+                    auditService.log("Afisare categorii");
+
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
@@ -102,10 +122,19 @@ public class Main {
                     scanner.nextLine();
                     String name = scanner.nextLine();
                     clientService.deleteCategory(name);
+
+                    auditService.log("Stergere categorie");
+
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
 
+
+                /*
+                *
+                * de implementat modificari in csv
+                *
+                * */
                 case 4: {
                     clientService.showCategories();
                     System.out.println("A cata categorie doresti sa o modifici?");
@@ -119,6 +148,7 @@ public class Main {
                     String description = scanner.nextLine();
                     newCategory.setDescription(description);
                     clientService.updateCategory(newCategory);
+                    auditService.log("categorie modificata");
                     break;
                 }
 
@@ -126,6 +156,7 @@ public class Main {
                     clientService.sortCategories();
                     clientService.showCategories();
                     pressAnyKeyToContinue(scanner);
+                    auditService.log("afisare categorii ordine alfabetica");
                     break;
                 }
 
@@ -133,13 +164,16 @@ public class Main {
                     Company company = new Company();
                     company.readCompany();
                     clientService.addCompany(company);
+                    companiesService.write(company);
                     pressAnyKeyToContinue(scanner);
+                    auditService.log("adaugare companie");
                     break;
                 }
 
                 case 7:{
                     clientService.showCompanies();
                     pressAnyKeyToContinue(scanner);
+                    auditService.log("Afisare companii");
                     break;
                 }
 
@@ -149,6 +183,7 @@ public class Main {
                     scanner.nextLine();
                     String name = scanner.nextLine();
                     clientService.deleteCompany(name);
+                    auditService.log("Stergere companie");
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
@@ -169,31 +204,9 @@ public class Main {
                         adress.readAdress();
                         newCompany.setAdress(adress);
                     }
-                    scanner.nextLine();
-                    System.out.println("Doresti sa modifici persoana de contact? (Y/N)");
-                    choices = scanner.nextLine();
-                    if (choices.equals("Y")){
-                        System.out.println("Introduce persoana de contact");
-                        String contact = scanner.nextLine();
-                        newCompany.setContactPerson(contact);
-                    }
-
-                    System.out.println("Doresti sa modifici emailul? (Y/N)");
-                    choices = scanner.nextLine();
-                    if (choices.equals("Y")){
-                        System.out.println("Introduce emailul");
-                        String email = scanner.nextLine();
-                        newCompany.setEmail(email);
-                    }
-
-                    System.out.println("Doresti sa modifici numarul de contact? (Y/N)");
-                    choices = scanner.nextLine();
-                    if (choices.equals("Y")){
-                        System.out.println("Introduce numarul de contact");
-                        int number = scanner.nextInt();
-                        newCompany.setContactNumber(number);
-                    }
+                    modifyCompanyData(newCompany);
                     clientService.updateCompany(newCompany);
+                    auditService.log("Modificare companie");
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
@@ -201,13 +214,20 @@ public class Main {
                 case 10:{
                     Distribuitor distribuitor = new Distribuitor();
                     distribuitor.readDistribuitor();
+
                     clientService.addDistribuitor(distribuitor);
+                    distribuitorsService.write(distribuitor);
+
+                    auditService.log("Adaugare distribuitor");
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
 
                 case 11:{
                     clientService.showDistribuitors();
+
+                    auditService.log("Afisare distribuitor");
+
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
@@ -219,6 +239,9 @@ public class Main {
                     scanner.nextLine();
                     String name = scanner.nextLine();
                     clientService.deleteDistribuitor(name);
+
+                    auditService.log("Stergere distribuitor");
+
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
@@ -235,12 +258,13 @@ public class Main {
 
                     System.out.println("Doresti sa modifici vreun produs al distribuitorului?(Y/N)");
                     String choice = scanner.nextLine();
-                    HashSet<Product> distributorProducts = new HashSet<Product>(newdistribuitor.getProducts());
+                    HashSet<Product> distributorProducts = new HashSet<>(newdistribuitor.getProducts());
                     while (choice.equals("Y")){
                         System.out.println(distributorProducts);
                         scanner.nextLine();
                         System.out.println("Codul produsului pe care doresti sa il modifici:");
                         int code = scanner.nextInt();
+                        scanner.nextLine();
                         for (Product product:distributorProducts){
                             if (product.getCode() == code){
                                 System.out.println("Doresti sa modifici pretul produsului?(Y/N)");
@@ -259,13 +283,20 @@ public class Main {
                         choice = scanner.nextLine();
                     }
                     newdistribuitor.setProducts(distributorProducts);
+
+                    auditService.log("Modificare distribuitor");
+
                     pressAnyKeyToContinue(scanner);
+                    break;
                 }
 
                 case 14:{
                     Branch branch = new Branch();
                     branch.readBranch();
+
                     clientService.addBranch(branch);
+                    auditService.log("Adaugare branch");
+
                     pressAnyKeyToContinue(scanner);
                 }
             }
