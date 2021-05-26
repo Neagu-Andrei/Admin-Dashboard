@@ -16,7 +16,7 @@ public class CategoriesCSVService {
 
             Category addCategory = new Category(categoryName,categoryDescription);
 
-            clientService.addCategory(addCategory);
+            //clientService.addCategory(addCategory);
         }
     }
 

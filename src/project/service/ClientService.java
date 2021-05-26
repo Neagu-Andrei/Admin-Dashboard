@@ -1,6 +1,10 @@
 package project.service;
 
+import com.mysql.cj.xdevapi.Collection;
 import project.model.*;
+import project.repository.CategoriesRepository;
+import project.repository.CompaniesRepository;
+import project.repository.ProductsRepository;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -25,6 +29,7 @@ public class ClientService {
         distribuitors = new ArrayList<>();
         companies = new ArrayList<>();
         branches = new ArrayList<>();
+        products = new ArrayList<>();
     }
 
 
@@ -38,32 +43,33 @@ public class ClientService {
         }
     }
 
-    public void addCategory(Category category){
+    public void addCategory(Category category, CategoriesRepository categoriesRepository){
         Scanner scanner = new Scanner(System.in);
         try {
             for (Category cat:this.categories)
                 if(category.getName().equals(cat.getName())){
                     throw new Exception("Aceasta categorie este deja inserata");
                 }
-            categories.add(category);
+            categoriesRepository.addCategory(category);
+            this.categories.add(category);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Doriti sa updatati categoria existenta? (Y/N)");
             String message = scanner.next();
             if (message.equals("Y")){
-                updateCategory(category);
+                updateCategory(category, categoriesRepository);
             }
         }
     }
 
-    public void addCompany(Company company){
+    public void addCompany(Company company, CompaniesRepository companiesRepository){
         try{
             for (Company company1:this.companies){
                 if(company.getName().equals(company1.getName())){
                     throw new Exception("Compania pe care doriti sa o inserati exista deja.");
                 }
             }
-            companies.add(company);
+            companiesRepository.addCompany(company);
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -84,14 +90,33 @@ public class ClientService {
         }
     }
 
-    public void addProduct(Product product){}
+    public void addProduct(Product product, ProductsRepository productsRepository){
+        Scanner scanner = new Scanner(System.in);
+        try{
+            for (Product prod:products)
+                if (product.getCode() == prod.getCode())
+                    throw new Exception("Acest produs este deja inserat");
+            productsRepository.addProduct(product);
+            this.products.add(product);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("Doriti sa updatati produsul?");
+            String message = scanner.next();
+            if (message.equals("Y")){
+                updateProduct(product);
+            }
+        }
+    }
+
+
     //Delete
 
-    public void deleteCategory(String name){
+    public void deleteCategory(String name, CategoriesRepository categoriesRepository){
         try{
             for (Category category:this.categories){
                 if(category.getName().equals(name)) {
-                    this.categories.remove(category);
+                    categoriesRepository.deleteCategory(category);
                     throw new Exception("Categoria a fost stearsa.");
                 }
             }
@@ -102,11 +127,11 @@ public class ClientService {
         }
     }
 
-    public void deleteCompany(String name){
+    public void deleteCompany(String name, CompaniesRepository companiesRepository){
         try{
             for (Company company:this.companies){
                 if(company.getName().equals(name)) {
-                    this.categories.remove(company);
+                    companiesRepository.deleteCompany(company);
                     throw new Exception("Compania a fost stearsa.");
                 }
             }
@@ -147,12 +172,27 @@ public class ClientService {
         }
     }
 
+    public void deleteProduct(int code, ProductsRepository productsRepository){
+        try{
+            for (Product prod:this.products){
+                if (prod.getCode() == code){
+                    productsRepository.deleteProduct(prod);
+                    throw new Exception("Produsul a fost sters. ");
+                }
+            }
+            throw new Exception("Nu am gasit produsul cerut");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     //UPDATE
-    public void updateCategory(Category category){
+    public void updateCategory(Category category, CategoriesRepository categoriesRepository){
        try {
            for (Category category1:this.categories){
                if (category.getName().equals(category1.getName())){
-                    category1.setDescription(category.getDescription());
+                    categoriesRepository.updateCategoryName(category.getDescription(), category1);
                     throw new Exception("Categoria a fost modificata.");
                }
            }
@@ -180,14 +220,11 @@ public class ClientService {
             System.out.println(e.getMessage());
         }
     }
-    public void updateCompany(Company company){
+    public void updateCompany(Company company, CompaniesRepository companiesRepository){
         try {
             for (Company company1:this.companies){
                 if (company.getName().equals(company1.getName())){
-                    company1.setAdress(company.getAdress());
-                    company1.setContactNumber(company.getContactNumber());
-                    company1.setContactPerson(company.getContactPerson());
-                    company1.setEmail(company.getEmail());
+                    companiesRepository.updateCompanyContactPerson(company.getContactPerson(), company1);
                     throw new Exception("Compania" + company1.getName() +"a fost modificata.");
                 }
             }
@@ -214,14 +251,30 @@ public class ClientService {
         }
     }
 */
-    public void showCategories(){
-        for (int i=0;i<categories.size();i++)
-            System.out.println((i+1) + ":\t" +categories.get(i));
+    private void updateProduct(Product product) {
+        try{
+            for (Product prod:this.products){
+                if (prod.getCode() == product.getCode()){
+                    prod.setPrice(product.getPrice());
+                    prod.setName(product.getName());
+                    prod.setDescription(product.getDescription());
+                    prod.setCategory(product.getCategory());
+                    throw new Exception("Produsul a fost modificat");
+                }
+            }
+            throw new Exception("Nu am gasit produsul cautat");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
-    public void showCompanies(){
-        for (int i=0;i<companies.size();i++)
-            System.out.println((i+1) + ":\t"+ companies.get(i));
+    public void showCategories(CategoriesRepository categoriesRepository){
+        categoriesRepository.displayCategories();
+    }
+
+    public void showCompanies(CompaniesRepository companiesRepository){
+        companiesRepository.displayCompanies();
     }
 
     public void showDistribuitors(){
@@ -229,11 +282,17 @@ public class ClientService {
             System.out.println((i+1)+ ": "+ distribuitors.get(i));
     }
 
+    public void showProducts(ProductsRepository productsRepository) {
+        productsRepository.displayProducts();
+    }
+
+    public void searchCategories(String name,CategoriesRepository categoriesRepository){
+        categoriesRepository.getCategoryByName(name).readCategory();
+    }
 
     public void sortCategories(){
         Collections.sort(categories);
     }
-
     public ArrayList<Category> getCategories() { return categories; }
 
     public void setCategories(ArrayList<Category> categories) { this.categories = categories; }
@@ -259,4 +318,6 @@ public class ClientService {
                 ", branches=" + branches +
                 '}';
     }
+
+
 }

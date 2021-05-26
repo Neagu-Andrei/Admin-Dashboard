@@ -25,10 +25,22 @@ public class ProductsCSVService {
             for (Category category: categories){
                 if (category.getName().equals(productCategoryName)){
                     addProduct = new Product(productName, productCode, new SalesPrice(salesPrice),productDescription, category);
-                    clientService.addProduct(addProduct);
+                    //clientService.addProduct(addProduct);
                     break;
                 }
             }
         }
+    }
+    public void write(Product product){
+        CSVWriterService writerService = CSVWriterService.getInstance();
+
+        ArrayList<String> message = new ArrayList<>();
+        message.add(product.getName());
+        message.add(Integer.toString(product.getCode()));
+        message.add(Double.toString(product.getPrice().getSalesPrice()));
+        message.add(product.getDescription());
+        message.add(product.getCategory().getName());
+
+        writerService.write("src/project/csv/products.csv", message);
     }
 }

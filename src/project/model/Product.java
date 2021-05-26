@@ -55,6 +55,13 @@ public class Product {
         this.description = description;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public void readProduct() {
         Scanner scanner = new Scanner(System.in);

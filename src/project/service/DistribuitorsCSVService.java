@@ -30,9 +30,11 @@ public class DistribuitorsCSVService {
             while (i < distribuitor.size()){
                 int distribuitorProductCode = Integer.parseInt(distribuitor.get(i));
                 ArrayList<Product> products = clientService.getProducts();
-                for (Product product: products){
-                    if(product.getCode() == distribuitorProductCode){
-                        distribuitorProducts.add(product);
+                if (products != null){
+                    for (Product product: products){
+                        if(product.getCode() == distribuitorProductCode){
+                            distribuitorProducts.add(product);
+                        }
                     }
                 }
                 i++;

@@ -1,6 +1,10 @@
 package project;
 
 import project.model.*;
+import project.repository.CategoriesRepository;
+import project.repository.CompaniesRepository;
+import project.repository.DiscountsRepository;
+import project.repository.ProductsRepository;
 import project.service.*;
 
 import java.util.HashSet;
@@ -49,20 +53,114 @@ public class Main {
         }
     }
 
-    public static void main(String args[]){
+
+    public static void case1(ClientService clientService,CategoriesRepository categoriesRepository, AuditCSVService auditService, Scanner scanner){
+        Category category = new Category();
+        category.readCategory();
+
+        clientService.addCategory(category, categoriesRepository);
+
+        auditService.log("Adaugare categorie");
+
+        pressAnyKeyToContinue(scanner);
+    }
+
+    public static void case4(ClientService clientService, AuditCSVService auditService,CategoriesRepository categoriesRepository, Scanner scanner){
+        clientService.showCategories(categoriesRepository);
+        System.out.println("A cata categorie doresti sa o modifici?");
+        scanner.nextLine();
+        int i = scanner.nextInt();
+        scanner.nextLine();
+        Category newCategory = new Category();
+        String name = clientService.getCategories().get(i-1).getName();
+        newCategory.setName(name);
+        System.out.println("Citeste noua descriere a categoriei");
+        String description = scanner.nextLine();
+        newCategory.setDescription(description);
+        clientService.updateCategory(newCategory, categoriesRepository);
+        auditService.log("categorie modificata");
+    }
+
+    public static void case9(ClientService clientService, AuditCSVService auditService,CompaniesRepository companiesRepository ,Scanner scanner){
+        clientService.showCompanies(companiesRepository);
+        System.out.println("A cata companie doresti sa o modifici?");
+        scanner.nextLine();
+        int i = scanner.nextInt();
+        scanner.nextLine();
+        Company newCompany;
+        newCompany = clientService.getCompanies().get(i-1);
+
+        System.out.println("Doresti sa modifici adresa firmei? (Y/N)");
+        String choices = scanner.nextLine();
+        if (choices.equals("Y")){
+            Adress adress = new Adress();
+            adress.readAdress();
+            newCompany.setAdress(adress);
+        }
+        modifyCompanyData(newCompany);
+        clientService.updateCompany(newCompany, companiesRepository);
+        auditService.log("Modificare companie");
+        pressAnyKeyToContinue(scanner);
+    }
+
+    public static void case13(ClientService clientService, AuditCSVService auditService, Scanner scanner){
+        clientService.showDistribuitors();
+        System.out.println("Al catelea distribuitor doresti sa il modifici: ");
+        scanner.nextLine();
+        int i = scanner.nextInt();
+        scanner.nextLine();
+        Distribuitor newdistribuitor;
+        newdistribuitor = clientService.getDistribuitors().get(i-1);
+        modifyCompanyData(newdistribuitor);
+
+        System.out.println("Doresti sa modifici vreun produs al distribuitorului?(Y/N)");
+        String choice = scanner.nextLine();
+        HashSet<Product> distributorProducts = new HashSet<>(newdistribuitor.getProducts());
+        while (choice.equals("Y")){
+            System.out.println(distributorProducts);
+            scanner.nextLine();
+            System.out.println("Codul produsului pe care doresti sa il modifici:");
+            int code = scanner.nextInt();
+            scanner.nextLine();
+            for (Product product:distributorProducts){
+                if (product.getCode() == code){
+                    System.out.println("Doresti sa modifici pretul produsului?(Y/N)");
+                    String secondChoice = scanner.nextLine();
+                    if (secondChoice.equals("Y")){
+                        System.out.println("Pretul produsului: ");
+                        SalesPrice price = new SalesPrice(scanner.nextDouble());
+                        product.setPrice(price);
+                        System.out.println("Pretul a fost updatat.");
+                    }
+                    System.out.println("Produsul a fost modificat.");
+                    break;
+                }
+            }
+            System.out.println("Doresti sa mai modifici un produs? (Y/N)");
+            choice = scanner.nextLine();
+        }
+        newdistribuitor.setProducts(distributorProducts);
+
+        auditService.log("Modificare distribuitor");
+
+        pressAnyKeyToContinue(scanner);
+    }
+
+    public static void main(String[] args){
         ClientService clientService = new ClientService();
 
-        CategoriesCSVService categoriesService = new CategoriesCSVService();
-        CompaniesCSVService companiesService = new CompaniesCSVService();
-        ProductsCSVService productsService = new ProductsCSVService();
-        DistribuitorsCSVService distribuitorsService = new DistribuitorsCSVService();
+        CategoriesRepository categoriesRepository = new CategoriesRepository();
+        ProductsRepository productsRepository = new ProductsRepository();
+        CompaniesRepository companiesRepository = new CompaniesRepository();
+        DiscountsRepository discountsRepository = new DiscountsRepository();
+
+        categoriesRepository.createTable();
+        productsRepository.createTable();
+        companiesRepository.createTable();
+        discountsRepository.createTable();
 
         AuditCSVService auditService = AuditCSVService.getInstance();
-
-        categoriesService.read(clientService);
-        companiesService.read(clientService);
-        distribuitorsService.read(clientService);
-        productsService.read(clientService);
+        DistribuitorsCSVService distribuitorsService = new DistribuitorsCSVService();
 
         Scanner scanner = new Scanner(System.in);
         int o = 1;
@@ -74,6 +172,7 @@ public class Main {
                 "\n2: Afisati categoriile POS" +
                 "\n3: Stergeti o categorie" +
                 "\n4: Modificati o categorie" +
+                "\n22: Cautati o categorie dupa nume" +
                 "\n5: Afisati categoriile in ordine alfabetica"+
                 "\n_______________________________" +
                 "\n6: Adaugati o firma noua" +
@@ -90,6 +189,11 @@ public class Main {
                 "\n15: Afisati toate branch urile" +
                 "\n16: Stergeti un branch" +
                 "\n17: Updatati un branch" +
+                "\n__________________________________" +
+                "\n18: Adaugati un produs nou" +
+                "\n19: Afisati toate produsele" +
+                "\n20: Stergeti un produs" +
+                "\n21: Updatati un produs" +
                 "\n0: EXIT"
             );
 
@@ -97,19 +201,11 @@ public class Main {
             switch (o) {
 
                 case 1:{
-                    Category category = new Category();
-                    category.readCategory();
-
-                    categoriesService.write(category);
-                    clientService.addCategory(category);
-
-                    auditService.log("Adaugare categorie");
-
-                    pressAnyKeyToContinue(scanner);
+                    case1(clientService, categoriesRepository, auditService, scanner);
                     break;
                 }
                 case 2: {
-                    clientService.showCategories();
+                    clientService.showCategories(categoriesRepository);
 
                     auditService.log("Afisare categorii");
 
@@ -117,11 +213,11 @@ public class Main {
                     break;
                 }
                 case 3: {
-                    clientService.showCategories();
+                    clientService.showCategories(categoriesRepository);
                     System.out.println("Numele categoriei pe care doriti sa o stergeti:");
                     scanner.nextLine();
                     String name = scanner.nextLine();
-                    clientService.deleteCategory(name);
+                    clientService.deleteCategory(name, categoriesRepository);
 
                     auditService.log("Stergere categorie");
 
@@ -136,78 +232,56 @@ public class Main {
                 *
                 * */
                 case 4: {
-                    clientService.showCategories();
-                    System.out.println("A cata categorie doresti sa o modifici?");
-                    scanner.nextLine();
-                    int i = scanner.nextInt();
-                    scanner.nextLine();
-                    Category newCategory = new Category();
-                    String name = clientService.getCategories().get(i-1).getName();
-                    newCategory.setName(name);
-                    System.out.println("Citeste noua descriere a categoriei");
-                    String description = scanner.nextLine();
-                    newCategory.setDescription(description);
-                    clientService.updateCategory(newCategory);
-                    auditService.log("categorie modificata");
+                    case4(clientService, auditService, categoriesRepository ,scanner);
                     break;
                 }
 
-                case 5:{
-                    clientService.sortCategories();
-                    clientService.showCategories();
+                case 22:{
+                    System.out.println("Numele categoriei pe care doriti sa o cautati: ");
+                    String name = scanner.nextLine();
+                    clientService.searchCategories(name,categoriesRepository);
+                    clientService.showCategories(categoriesRepository);
                     pressAnyKeyToContinue(scanner);
-                    auditService.log("afisare categorii ordine alfabetica");
+                    auditService.log("cautare categorie dupa nume");
                     break;
                 }
+                /*
+                case 5:{
+                    clientService.sortCategories();
+                    pressAnyKeyToContinue(scanner);
+                    auditService.log("sortare categorie dupa nume");
+                    break;
+                }*/
 
                 case 6:{
                     Company company = new Company();
                     company.readCompany();
-                    clientService.addCompany(company);
-                    companiesService.write(company);
+                    clientService.addCompany(company, companiesRepository);
                     pressAnyKeyToContinue(scanner);
                     auditService.log("adaugare companie");
                     break;
                 }
 
                 case 7:{
-                    clientService.showCompanies();
+                    clientService.showCompanies(companiesRepository);
                     pressAnyKeyToContinue(scanner);
                     auditService.log("Afisare companii");
                     break;
                 }
 
                 case 8:{
-                    clientService.showCompanies();
+                    clientService.showCompanies(companiesRepository);
                     System.out.println("Numele companiei pe care doriti sa o stergeti:");
                     scanner.nextLine();
                     String name = scanner.nextLine();
-                    clientService.deleteCompany(name);
+                    clientService.deleteCompany(name, companiesRepository);
                     auditService.log("Stergere companie");
                     pressAnyKeyToContinue(scanner);
                     break;
                 }
 
                 case 9:{
-                    clientService.showCompanies();
-                    System.out.println("A cata companie doresti sa o modifici?");
-                    scanner.nextLine();
-                    int i = scanner.nextInt();
-                    scanner.nextLine();
-                    Company newCompany;
-                    newCompany = clientService.getCompanies().get(i-1);
-
-                    System.out.println("Doresti sa modifici adresa firmei? (Y/N)");
-                    String choices = scanner.nextLine();
-                    if (choices.equals("Y")){
-                        Adress adress = new Adress();
-                        adress.readAdress();
-                        newCompany.setAdress(adress);
-                    }
-                    modifyCompanyData(newCompany);
-                    clientService.updateCompany(newCompany);
-                    auditService.log("Modificare companie");
-                    pressAnyKeyToContinue(scanner);
+                    case9(clientService, auditService, companiesRepository, scanner);
                     break;
                 }
 
@@ -247,46 +321,7 @@ public class Main {
                 }
                 //de testat cazul in care un distribuitor nu are produse si vrem sa le adaugam
                 case 13:{
-                    clientService.showDistribuitors();
-                    System.out.println("Al catelea distribuitor doresti sa il modifici: ");
-                    scanner.nextLine();
-                    int i = scanner.nextInt();
-                    scanner.nextLine();
-                    Distribuitor newdistribuitor;
-                    newdistribuitor = clientService.getDistribuitors().get(i-1);
-                    modifyCompanyData(newdistribuitor);
-
-                    System.out.println("Doresti sa modifici vreun produs al distribuitorului?(Y/N)");
-                    String choice = scanner.nextLine();
-                    HashSet<Product> distributorProducts = new HashSet<>(newdistribuitor.getProducts());
-                    while (choice.equals("Y")){
-                        System.out.println(distributorProducts);
-                        scanner.nextLine();
-                        System.out.println("Codul produsului pe care doresti sa il modifici:");
-                        int code = scanner.nextInt();
-                        scanner.nextLine();
-                        for (Product product:distributorProducts){
-                            if (product.getCode() == code){
-                                System.out.println("Doresti sa modifici pretul produsului?(Y/N)");
-                                String secondChoice = scanner.nextLine();
-                                if (secondChoice.equals("Y")){
-                                    System.out.println("Pretul produsului: ");
-                                    SalesPrice price = new SalesPrice(scanner.nextDouble());
-                                    product.setPrice(price);
-                                    System.out.println("Pretul a fost updatat.");
-                                }
-                                System.out.println("Produsul a fost modificat.");
-                                break;
-                            }
-                        }
-                        System.out.println("Doresti sa mai modifici un produs? (Y/N)");
-                        choice = scanner.nextLine();
-                    }
-                    newdistribuitor.setProducts(distributorProducts);
-
-                    auditService.log("Modificare distribuitor");
-
-                    pressAnyKeyToContinue(scanner);
+                    case13(clientService, auditService, scanner);
                     break;
                 }
 
@@ -298,6 +333,29 @@ public class Main {
                     auditService.log("Adaugare branch");
 
                     pressAnyKeyToContinue(scanner);
+                }
+
+                case 18:{
+                    Product product = new Product();
+                    product.readProduct();
+
+                    clientService.addProduct(product, productsRepository);
+                    auditService.log("Adaugare produs");
+                    pressAnyKeyToContinue(scanner);
+                    break;
+                }
+
+                case 19:{
+                    clientService.showProducts(productsRepository);
+                    auditService.log("Afisare produse");
+                    pressAnyKeyToContinue(scanner);
+                    break;
+                }
+
+                case 20:{
+                    System.out.println("Codul produsului pe care doriti sa il stergeti: ");
+                    int code = scanner.nextInt();
+                    clientService.deleteProduct(code, productsRepository);
                 }
             }
         }

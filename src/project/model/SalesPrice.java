@@ -24,4 +24,11 @@ public class SalesPrice {
         System.out.println("Citeste pretul de vanzare: ");
         this.salesPrice = scanner.nextDouble();
     }
+
+    @Override
+    public String toString() {
+        return "SalesPrice{" +
+                "salesPrice=" + salesPrice +
+                '}';
+    }
 }

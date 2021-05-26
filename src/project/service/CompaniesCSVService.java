@@ -27,7 +27,7 @@ public class CompaniesCSVService {
 
             Company addCompany = new Company(companyName, adress, companyContactPerson, companyEmail, companyContactNumber);
 
-            clientService.addCompany(addCompany);
+            //clientService.addCompany(addCompany);
         }
     }
 
